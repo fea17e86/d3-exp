@@ -3,6 +3,8 @@ import { findDOMNode } from 'react-dom';
 import ReactFauxDOM from 'react-faux-dom';
 import d3 from 'd3';
 
+// https://bost.ocks.org/mike/bar/
+
 const margin = { top: 20, right: 20, bottom: 20, left: 20 };
 
 export default class BarChart extends Component {
