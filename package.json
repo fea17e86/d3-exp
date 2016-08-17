@@ -1,13 +1,13 @@
 {
-  "name": "[PROJECT_NAME]",
+  "name": "d3-exp",
   "version": "0.0.1",
   "main": "dist/index.js",
-  "description": "[DESCRIPTION]",
+  "description": "Doing experiments and gaining experience with d3.",
   "license": "MIT",
   "author": "fea17e86@mail.de",
   "repository": {
     "type": "git",
-    "url": "git@gitlab.cedavis.com:fea17e86/[PROJECT_NAME.git]"
+    "url": "git@gitlab.cedavis.com:fea17e86/d3-exp.git"
   },
   "dependencies": {
     "browserify": "^13.1.0",
