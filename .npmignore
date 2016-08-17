@@ -1,0 +1,11 @@
+/.git
+/node_modules/
+/npm-debug.log
+/dist
+/src
+.babelrc
+.editorconfig
+.eslintrc
+.gitattributes
+.gitignore
+gulpfiles.js
