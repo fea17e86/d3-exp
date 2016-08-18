@@ -1,9 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
-import BarChart from './components/BarChart';
+import * as d3 from 'd3';
 
-const data = [4, 8, 15, 16, 23, 42];
+import LineChart from './components/LineChart';
+
+// const simpleData = [4, 8, 15, 16, 23, 42];
 const height = 300;
-const width = 400;
+const width = 350;
 
-render(<BarChart data={data} height={height} width={width} />, document.getElementById('bar_chart'));
+d3.tsv('data/data.tsv', (error, data) => {
+  if (error) {
+    throw error;
+  }
+
+  render(<LineChart data={data} height={height} width={width} />, document.getElementById('line_chart'));
+});

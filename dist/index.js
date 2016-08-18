@@ -40021,7 +40021,19 @@ var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
 
 var _d = require('d3');
 
-var _d2 = _interopRequireDefault(_d);
+var d3 = _interopRequireWildcard(_d);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -40045,54 +40057,82 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
-var margin = { top: 20, right: 20, bottom: 20, left: 20 };
+var margin = { top: 20, right: 20, bottom: 30, left: 50 };
+var parseDate = d3.timeParse('%d-%b-%y');
 
-var BarChart = function (_Component) {
-  _inherits(BarChart, _Component);
+var xDomain = function xDomain(d) {
+  return d.date;
+};
+var yDomain = function yDomain(d) {
+  return d.close;
+};
 
-  function BarChart() {
-    _classCallCheck(this, BarChart);
+var LineChart = function (_Component) {
+  _inherits(LineChart, _Component);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(BarChart).apply(this, arguments));
+  function LineChart() {
+    _classCallCheck(this, LineChart);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(LineChart).apply(this, arguments));
   }
 
-  _createClass(BarChart, [{
-    key: 'render',
-    value: function render() {
-      this.fauxDOMNode = _reactFauxDom2.default.createElement('svg');
-
-      return this.createChart(this.fauxDOMNode);
-    }
-  }, {
+  _createClass(LineChart, [{
     key: 'createChart',
     value: function createChart(domNode) {
-
-      console.log(_d2.default);
-
+      var data = this.props.data;
       var width = this.props.width - margin.left - margin.right;
       var height = this.props.height - margin.top - margin.bottom;
 
-      var data = this.props.data;
+      var x = d3.scaleTime().range([0, width]);
+      var xValue = function xValue(d) {
+        return x(d.date);
+      };
+      var xAxis = d3.axisBottom(x);
 
-      _d2.default.select(domNode).selectAll('div').data(data).enter().append('div').style('width', function (d) {
-        return d * 10 + 'px';
-      }).text(function (d) {
-        return d;
+      var y = d3.scaleLinear().range([height, 0]);
+      var yValue = function yValue(d) {
+        return y(d.close);
+      };
+      var yAxis = d3.axisLeft(y);
+
+      var line = d3.line().x(xValue).y(yValue);
+
+      var svg = d3.select(domNode).attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      data.forEach(function (d) {
+        d.date = parseDate(d.date);
+        d.close = +d.close;
       });
+
+      x.domain(d3.extent(data, xDomain));
+      y.domain(d3.extent(data, yDomain));
+
+      svg.append('g').attr('class', 'x axis').attr('transform', 'translate(0,' + height + ')').call(xAxis);
+
+      svg.append('g').attr('class', 'y axis').call(yAxis).append('text').attr('transform', 'rotate(-90)').attr('y', 6).attr('dy', '.71em').style('text-anchor', 'end').text('Price ($)');
+
+      svg.append('path').datum(data).attr('class', 'line').attr('d', line);
 
       return domNode.toReact();
     }
+  }, {
+    key: 'render',
+    value: function render() {
+      this.fauxDOMNode = this.fauxDOMNode || _reactFauxDom2.default.createElement('svg');
+
+      return this.createChart(this.fauxDOMNode);
+    }
   }]);
 
-  return BarChart;
+  return LineChart;
 }(_react.Component);
 
-BarChart.propTypes = {
+LineChart.propTypes = {
   data: _react.PropTypes.array,
   height: _react.PropTypes.number,
   width: _react.PropTypes.number
 };
-exports.default = BarChart;
+exports.default = LineChart;
 ;
 
 },{"d3":1,"react":190,"react-dom":34,"react-faux-dom":36}],193:[function(require,module,exports){
@@ -40104,21 +40144,43 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
 
-var _BarChart = require('./components/BarChart');
+var _d = require('d3');
 
-var _BarChart2 = _interopRequireDefault(_BarChart);
+var d3 = _interopRequireWildcard(_d);
+
+var _LineChart = require('./components/LineChart');
+
+var _LineChart2 = _interopRequireDefault(_LineChart);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-var data = [4, 8, 15, 16, 23, 42];
+// const simpleData = [4, 8, 15, 16, 23, 42];
 var height = 300;
-var width = 400;
+var width = 350;
 
-(0, _reactDom.render)(_react2.default.createElement(_BarChart2.default, { data: data, height: height, width: width }), document.getElementById('bar_chart'));
+d3.tsv('data/data.tsv', function (error, data) {
+  if (error) {
+    throw error;
+  }
 
-},{"./components/BarChart":192,"react":190,"react-dom":34}]},{},[193])
+  (0, _reactDom.render)(_react2.default.createElement(_LineChart2.default, { data: data, height: height, width: width }), document.getElementById('line_chart'));
+});
+
+},{"./components/LineChart":192,"d3":1,"react":190,"react-dom":34}]},{},[193])
 
 
 //# sourceMappingURL=index.js.map

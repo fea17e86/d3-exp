@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactFauxDOM from 'react-faux-dom';
-import d3 from 'd3';
+import * as d3 from 'd3';
 
 // https://bost.ocks.org/mike/bar/
 
@@ -22,20 +22,23 @@ export default class BarChart extends Component {
   }
 
   createChart(domNode) {
-
-    console.log(d3);
-
     const width = this.props.width - margin.left - margin.right;
     const height = this.props.height - margin.top - margin.bottom;
 
     const data = this.props.data;
 
-    d3.select(domNode)
+    /*d3.select(domNode)
       .selectAll('div')
         .data(data)
       .enter().append('div')
         .style('width', function(d) { return d * 10 + 'px'; })
-        .text(function(d) { return d; });
+        .text(function(d) { return d; });*/
+
+    d3.select(domNode).selectAll("p")
+        .data(data)
+        .enter()
+        .append("p")
+        .text("New paragraph!");
 
     return domNode.toReact();
   }
