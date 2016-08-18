@@ -3,3 +3,10 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.chart-tile {
+  border: 1px solid #ccc;
+  display: inline-block;
+  margin: 0 20px 20px 0;
+  vertical-align: middle;
+}

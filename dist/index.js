@@ -40057,6 +40057,146 @@ function _inherits(subClass, superClass) {
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
+// https://bost.ocks.org/mike/bar/
+
+var margin = { top: 30, right: 30, bottom: 30, left: 30 };
+
+var BarChart = function (_Component) {
+  _inherits(BarChart, _Component);
+
+  function BarChart() {
+    _classCallCheck(this, BarChart);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(BarChart).apply(this, arguments));
+  }
+
+  _createClass(BarChart, [{
+    key: 'render',
+    value: function render() {
+      if (!this.fauxDOMNode) {
+        this.fauxDOMNode = _reactFauxDom2.default.createElement('svg');
+      }
+      return this.createChart(this.fauxDOMNode).toReact();
+    }
+  }, {
+    key: 'createChart',
+    value: function createChart(domNode) {
+      var width = this.props.width - margin.left - margin.right;
+      var height = this.props.height - margin.top - margin.bottom;
+      var data = this.props.data;
+      var barWidth = Math.floor((width - (data.length - 1)) / data.length);
+
+      var xScale = d3.scaleLinear().domain([0, data.length - 1]).range([0, data.length * barWidth + data.length - 1]);
+      var xAxis = d3.axisBottom(xScale);
+      var yScale = d3.scaleLinear().domain([0, d3.max(data, function (d) {
+        return d;
+      })]).range([0, height]).nice();
+      var yAxis = d3.axisLeft(yScale);
+
+      var chart = d3.select(domNode).attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
+
+      chart.append('g').attr('class', 'axis').attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')').call(yAxis);
+
+      chart.append('g').attr('class', 'axis').attr('transform', 'translate(' + margin.left + ', ' + (height + margin.top) + ')').call(xAxis);
+
+      var bars = chart.selectAll('rect.bar').data(data).enter().append('rect').attr('class', 'bar').attr('x', function (d, i) {
+        return xScale(i) + margin.left;
+      }).attr('y', function (d) {
+        return height + margin.top - yScale(d);
+      }).attr('width', barWidth).attr('height', function (d) {
+        return yScale(d);
+      });
+
+      var labels = chart.selectAll('text.bar-label').data(data).enter().append('text').text(function (d) {
+        return d;
+      }).attr('class', 'bar-label').attr('text-anchor', 'middle').attr('x', function (d, i) {
+        return xScale(i) + margin.left + barWidth / 2;
+      }).attr('y', function (d, i) {
+        return height + margin.top - yScale(d) + 10;
+      }).attr('font-family', 'sans-serif').attr('font-size', '9px');
+
+      return domNode;
+    }
+  }]);
+
+  return BarChart;
+}(_react.Component);
+
+BarChart.propTypes = {
+  data: _react.PropTypes.array,
+  height: _react.PropTypes.number,
+  width: _react.PropTypes.number
+};
+exports.default = BarChart;
+;
+
+},{"d3":1,"react":190,"react-dom":34,"react-faux-dom":36}],193:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+}();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactFauxDom = require('react-faux-dom');
+
+var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
+
+var _d = require('d3');
+
+var d3 = _interopRequireWildcard(_d);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
 var margin = { top: 20, right: 20, bottom: 30, left: 50 };
 var parseDate = d3.timeParse('%d-%b-%y');
 
@@ -40135,7 +40275,126 @@ LineChart.propTypes = {
 exports.default = LineChart;
 ;
 
-},{"d3":1,"react":190,"react-dom":34,"react-faux-dom":36}],193:[function(require,module,exports){
+},{"d3":1,"react":190,"react-dom":34,"react-faux-dom":36}],194:[function(require,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+  };
+}();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactFauxDom = require('react-faux-dom');
+
+var _reactFauxDom2 = _interopRequireDefault(_reactFauxDom);
+
+var _d = require('d3');
+
+var d3 = _interopRequireWildcard(_d);
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  } else {
+    var newObj = {};if (obj != null) {
+      for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+      }
+    }newObj.default = obj;return newObj;
+  }
+}
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+// https://bost.ocks.org/mike/bar/
+
+var margin = { top: 20, right: 20, bottom: 20, left: 20 };
+
+var ScatterChart = function (_Component) {
+  _inherits(ScatterChart, _Component);
+
+  function ScatterChart() {
+    _classCallCheck(this, ScatterChart);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(ScatterChart).apply(this, arguments));
+  }
+
+  _createClass(ScatterChart, [{
+    key: 'render',
+    value: function render() {
+      if (!this.fauxDOMNode) {
+        this.fauxDOMNode = _reactFauxDom2.default.createElement('svg');
+      }
+      return this.createChart(this.fauxDOMNode).toReact();
+    }
+  }, {
+    key: 'createChart',
+    value: function createChart(domNode) {
+      var width = this.props.width - margin.left - margin.right;
+      var height = this.props.height - margin.top - margin.bottom;
+
+      var data = this.props.data;
+
+      var circles = d3.select(domNode).attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).selectAll('circle').data(data).enter().append('circle');
+
+      circles.attr('cx', function (d, i) {
+        return i * 15 + margin.left;
+      }).attr('cy', function (d) {
+        return height + margin.top - d * 8;
+      }).attr('r', 1.5);
+
+      return domNode;
+    }
+  }]);
+
+  return ScatterChart;
+}(_react.Component);
+
+ScatterChart.propTypes = {
+  data: _react.PropTypes.array,
+  height: _react.PropTypes.number,
+  width: _react.PropTypes.number
+};
+exports.default = ScatterChart;
+;
+
+},{"d3":1,"react":190,"react-dom":34,"react-faux-dom":36}],195:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -40147,6 +40406,14 @@ var _reactDom = require('react-dom');
 var _d = require('d3');
 
 var d3 = _interopRequireWildcard(_d);
+
+var _BarChart = require('./components/BarChart');
+
+var _BarChart2 = _interopRequireDefault(_BarChart);
+
+var _ScatterChart = require('./components/ScatterChart');
+
+var _ScatterChart2 = _interopRequireDefault(_ScatterChart);
 
 var _LineChart = require('./components/LineChart');
 
@@ -40168,9 +40435,12 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-// const simpleData = [4, 8, 15, 16, 23, 42];
+var simpleData = [5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18, 17, 16, 18, 23, 25];
 var height = 300;
 var width = 350;
+
+(0, _reactDom.render)(_react2.default.createElement(_BarChart2.default, { data: simpleData, height: height, width: width }), document.getElementById('bar_chart'));
+(0, _reactDom.render)(_react2.default.createElement(_ScatterChart2.default, { data: simpleData, height: height, width: width }), document.getElementById('scatter_chart'));
 
 d3.tsv('data/data.tsv', function (error, data) {
   if (error) {
@@ -40180,7 +40450,7 @@ d3.tsv('data/data.tsv', function (error, data) {
   (0, _reactDom.render)(_react2.default.createElement(_LineChart2.default, { data: data, height: height, width: width }), document.getElementById('line_chart'));
 });
 
-},{"./components/LineChart":192,"d3":1,"react":190,"react-dom":34}]},{},[193])
+},{"./components/BarChart":192,"./components/LineChart":193,"./components/ScatterChart":194,"d3":1,"react":190,"react-dom":34}]},{},[195])
 
 
 //# sourceMappingURL=index.js.map
